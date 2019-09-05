@@ -1,7 +1,10 @@
 import React from 'react';
-import NameBox from './NameBox.js';
 import {Client as ChatClient} from 'twilio-chat';
 import ChatChannel from './ChatChannel';
+import Button from "@material-ui/core/Button";
+import { withStyles, withTheme } from "@material-ui/styles";
+
+import SignIn from './SignIn';
 import './Chat.css';
 import {
   BrowserRouter as Router,
@@ -9,6 +12,15 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+
+const styles = {
+  logout: props => ({
+    color: props.theme.palette.getContrastText(props.theme.palette.primary.main),
+    position: "fixed",
+    top: "1em",
+    right: "1em"
+  })
+};
 
 class ChatApp extends React.Component {
   constructor(props) {
@@ -59,14 +71,20 @@ class ChatApp extends React.Component {
       channels: [],
     });
     localStorage.removeItem('name');
-    this.chatClient.shutdown();
+    if (this.chatClient) {
+      this.chatClient.shutdown();
+    }
     this.channel = null;
   };
 
-  getToken = () => {
+  getToken = async () => {
     // Paste your unique Chat token function
-    const myToken = '<Your token here>';
-    this.setState({token: myToken}, this.initChat);
+    //https://chat-backend-8416-dev.twil.io/chat/token
+    const response = await fetch(
+      process.env.REACT_APP_CHAT_BACKEND+"?Identity="+this.state.name
+    );
+    const myToken = await response.json();
+    this.setState({token: myToken.token}, this.initChat);
   };
 
   initChat = async () => {
@@ -109,6 +127,8 @@ class ChatApp extends React.Component {
   render() {
     var loginOrChat;
 
+    const { classes } = this.props;
+
     if (this.state.loggedIn) {
       loginOrChat = (
         <div id="ChatWindow" className="container">
@@ -123,7 +143,8 @@ class ChatApp extends React.Component {
                         key={channel.sid}
                         to={`/channels/${channel.sid}`}
                         className="list-group-item list-group-item-action"
-                        activeClassName="active">
+                        activeClassName="active"
+                      >
                         <li>{channel.friendlyName}</li>
                       </NavLink>
                     ))}
@@ -133,10 +154,11 @@ class ChatApp extends React.Component {
                 <div id="SelectedChannel" className="col-lg">
                   <Route
                     path="/channels/:selected_channel"
-                    render={({match}) => {
-                      let selectedChannelSid = match.params.selected_channel;
+                    render={({ match }) => {
+                      let selectedChannelSid =
+                        match.params.selected_channel;
                       let selectedChannel = this.state.channels.find(
-                        it => it.sid === selectedChannelSid,
+                        it => it.sid === selectedChannelSid
                       );
                       if (selectedChannel)
                         return (
@@ -161,14 +183,16 @@ class ChatApp extends React.Component {
           <br />
           <br />
           <form onSubmit={this.logOut}>
-            <button>Log out</button>
+            <Button variant="outlined" type="submit" className={classes.logout}>
+              Log out
+            </Button>
           </form>
         </div>
       );
     } else {
       loginOrChat = (
         <div>
-          <NameBox
+          <SignIn
             name={this.state.name}
             onNameChanged={this.onNameChanged}
             logIn={this.logIn}
@@ -181,4 +205,4 @@ class ChatApp extends React.Component {
   }
 }
 
-export default ChatApp;
+export default withTheme(withStyles(styles)(ChatApp));
