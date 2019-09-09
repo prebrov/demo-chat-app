@@ -17,8 +17,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://twilio.com/conversations">
+        Twilio Conversations
       </Link>{" "}
       {new Date().getFullYear()}
       {". Built with "}
@@ -34,8 +34,7 @@ const useStyles = makeStyles(theme => ({
     height: "100vh"
   },
   image: {
-    backgroundImage:
-      `url(${theme.images.signIn})`,
+    backgroundImage: `url(${theme.images.signIn})`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center"
