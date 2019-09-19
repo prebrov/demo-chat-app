@@ -2,7 +2,7 @@ import React from "react";
 
 export default function(props) {
   return (
-    <svg viewBox="0 0 1000 190" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1000 190" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <g stroke="none" fill="none">
         <g transform="translate(227.169000, 0.742000)" fill="#FFFFFE">
           <polyline points="183.694 47.207 190.07 18.441 248.491 18.441 252.668 0 157.244 0 131.746 115.108 227.166 115.108 231.341 95.891 172.915 95.891 179.52 65.998 232.632 65.998 236.804 47.557 183.498 47.557" />

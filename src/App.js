@@ -10,11 +10,20 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 
 import MenuIcon from "@material-ui/icons/Menu";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import { withStyles } from "@material-ui/styles";
-import Box from "@material-ui/core/Box";
+import { NavLink, withRouter } from "react-router-dom";
 
-const styles = {
+import Link from "@material-ui/core/Link";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+
+const ForwardNavLink = React.forwardRef((props, ref) => (
+  <NavLink {...props} innerRef={ref} />
+));
+
+const styles = theme => ({
   root: {
     height: "100vh"
   },
@@ -23,10 +32,13 @@ const styles = {
   },
   appIcon: {
     width: "10rem",
-    margin: "1.0em",
+    margin: "0.5rem",
     height: "auto"
+  },
+  title: {
+    color: theme.palette.getContrastText(theme.palette.primary.main)
   }
-};
+});
 
 class App extends Component {
   constructor(props) {
@@ -35,7 +47,8 @@ class App extends Component {
     const loggedIn = name !== "";
     this.state = {
       loggedIn: loggedIn,
-      name: name
+      name: name,
+      selectedChannel: null
     };
   }
 
@@ -44,7 +57,7 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
-          <Toolbar>
+          <Toolbar variant="dense">
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -53,9 +66,23 @@ class App extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <div className={classes.appIcon}>
-              <AppIcon />
-            </div>
+
+            <Breadcrumbs
+              className={classes.title}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon fontSize="small" />}
+            >
+              <Link color="inherit" to="/" component={ForwardNavLink}>
+                <div className={classes.appIcon}>
+                  <AppIcon />
+                </div>
+              </Link>
+              {this.props.location.state && (
+                <Typography variant="h5">
+                  {this.props.location.state.channelName}
+                </Typography>
+              )}
+            </Breadcrumbs>
             <div className={classes.spacer} />
             {this.state.loggedIn && (
               <form onSubmit={this.logOut}>
@@ -71,17 +98,14 @@ class App extends Component {
             )}
           </Toolbar>
         </AppBar>
-        <Toolbar id="back-to-top-anchor" />
-        <Box>
-          {this.state.loggedIn && <ChatApp name={this.state.name} />}
-          {!this.state.loggedIn && (
-            <SignIn
-              name={this.state.name}
-              onNameChanged={this.onNameChanged}
-              logIn={this.logIn}
-            />
-          )}
-        </Box>
+        {this.state.loggedIn && <ChatApp name={this.state.name} />}
+        {!this.state.loggedIn && (
+          <SignIn
+            name={this.state.name}
+            onNameChanged={this.onNameChanged}
+            logIn={this.logIn}
+          />
+        )}
       </div>
     );
   }
@@ -107,4 +131,4 @@ class App extends Component {
   };
 }
 
-export default withStyles(styles)(App);
+export default withRouter(withStyles(styles)(App));

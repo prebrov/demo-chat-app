@@ -6,18 +6,21 @@ import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import AttachFile from "@material-ui/icons/AttachFile";
 
-import theme from "./theme";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { Fab, makeStyles } from "@material-ui/core";
+import Zoom from "@material-ui/core/Zoom";
 
 const drawerOpen = true;
 const drawerHeight = "5em";
 
 const dropzoneRef = createRef();
 
-const styles = {
+const styles = theme => ({
   drawer: {
     flexShrink: 0,
     maxHeight: `${drawerHeight}`
@@ -45,7 +48,43 @@ const styles = {
     height: "50%",
     margin: theme.spacing(1)
   }
-};
+});
+
+const useStyles = makeStyles(theme => ({
+  zoom: {
+    position: "fixed",
+    bottom: theme.spacing(12),
+    right: theme.spacing(2)
+  }
+}));
+
+function ScrollTop(props) {
+  const { children } = props;
+  const classes = useStyles();
+
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 100
+  });
+
+  const handleClick = event => {
+    const anchor = (event.target.ownerDocument || document).querySelector(
+      "#back-to-top-anchor"
+    );
+
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  return (
+    <Zoom in={trigger}>
+      <div onClick={handleClick} role="presentation" className={classes.zoom}>
+        {children}
+      </div>
+    </Zoom>
+  );
+}
 
 class ChatChannel extends Component {
   constructor(props) {
@@ -109,7 +148,6 @@ class ChatChannel extends Component {
     let logic =
       oldState.loadingState === "initializing" ||
       oldState.channelProxy !== newProps.channelProxy;
-    console.log("xxx", oldState.channelProxy, newProps.channelProxy, logic);
     if (logic) {
       return {
         loadingState: "loading messages",
@@ -204,13 +242,19 @@ class ChatChannel extends Component {
           )}
         </Dropzone>
 
+        <ScrollTop {...this.props}>
+          <Fab color="secondary" size="small" aria-label="scroll back to top">
+            <KeyboardArrowUpIcon />
+          </Fab>
+        </ScrollTop>
+
         <Drawer
           className={classes.drawer}
           variant="persistent"
           anchor="bottom"
           open={drawerOpen}
         >
-          <Box className={classes.row}>
+          <div className={classes.row}>
             <form className={classes.form} onSubmit={this.sendMessage}>
               <TextField
                 variant="outlined"
@@ -238,7 +282,7 @@ class ChatChannel extends Component {
                 Send
               </Button>
             </form>
-          </Box>
+          </div>
         </Drawer>
       </div>
     );

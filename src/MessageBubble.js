@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 
-import { withStyles } from "@material-ui/styles";
-import theme from "./theme";
+import Moment from "react-moment";
 
-const styles = {
+import { withStyles } from "@material-ui/styles";
+
+const styles = theme => ({
   container: {},
   message: props => ({
     padding: theme.spacing(
@@ -42,7 +43,7 @@ const styles = {
     width: "100%",
     objectFit: "scale-down"
   }
-};
+});
 
 class MessageBubble extends Component {
   constructor(props) {
@@ -89,7 +90,7 @@ class MessageBubble extends Component {
             {m.body}
           </div>
           <span className={classes.time_date}>
-            {m.timestamp.toLocaleString()}
+            <Moment fromNow>{m.timestamp}</Moment>
           </span>
         </div>
       </div>

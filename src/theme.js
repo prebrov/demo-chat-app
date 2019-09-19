@@ -8,7 +8,7 @@ const theme = createMuiTheme({
     secondary: {
       main: "#5d7888"
     },
-    type: "light"
+    type: "dark"
   },
   overrides: {
     MuiButton: {
