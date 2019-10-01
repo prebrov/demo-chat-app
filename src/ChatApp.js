@@ -17,6 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 // import './Chat.css';
 import { NavLink, Route, Redirect } from "react-router-dom";
+import CreateChannel from "./CreateChannel";
 
 const ForwardNavLink = React.forwardRef((props, ref) => (
   <NavLink {...props} innerRef={ref} />
@@ -38,6 +39,9 @@ const styles = theme => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
+  },
+  row: {
+    margin: theme.spacing(2)
   },
   toolbar: theme.mixins.toolbar
 });
@@ -178,39 +182,38 @@ class ChatApp extends React.Component {
                         ))}
                         {this.state.chatReady && (
                           <Grid item xs={12} key="new">
-                            <Paper className={classes.new} elevation={0}>
-                              <Typography
-                                variant="h5"
-                                className={classes.centered}
-                              >
-                                <AddIcon />
-                                Start New Conversation
-                              </Typography>
-                            </Paper>
+                            <Link
+                              component={ForwardNavLink}
+                              style={{ textDecoration: "none" }}
+                              key={"link-new"}
+                              to={{
+                                pathname: `/new`
+                              }}
+                            >
+                              <Paper className={classes.new} elevation={0}>
+                                <Typography
+                                  variant="h5"
+                                  className={classes.centered}
+                                >
+                                  <AddIcon />
+                                  Start New Conversation
+                                </Typography>
+                              </Paper>
+                            </Link>
                           </Grid>
                         )}
                       </Grid>
-
-                      {/* <List>
-                        {this.state.channels.map(channel => (
-                          <Link
-                            component={ForwardNavLink}
-                            key={channel.sid}
-                            to={`/channels/${channel.sid}`}
-                            color="secondary"
-                          >
-                            <ListItem button className={classes.channels}>
-                              <ListItemText primary={channel.friendlyName} />
-                            </ListItem>
-                          </Link>
-                        ))}
-                      </List> */}
                       <h4>{this.state.statusString}</h4>
                     </Box>
                   </Container>
                 );
               }}
             />
+            <Route exact path="/new"
+              render={match => {
+                return <CreateChannel />;
+              }}
+              />
           </div>
         </div>
       </div>

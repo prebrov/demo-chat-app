@@ -33,7 +33,10 @@ const styles = theme => ({
   appIcon: {
     width: "10rem",
     margin: "0.5rem",
-    height: "auto"
+    height: "auto",
+    [theme.breakpoints.down("xs")]: {
+      width: "6rem"
+    }
   },
   title: {
     color: theme.palette.getContrastText(theme.palette.primary.main)
@@ -77,8 +80,8 @@ class App extends Component {
                   <AppIcon />
                 </div>
               </Link>
-              {this.props.location.state && (
-                <Typography variant="h5">
+              {this.state.loggedIn && this.props.location.state && (
+                <Typography variant="h5" noWrap>
                   {this.props.location.state.channelName}
                 </Typography>
               )}
@@ -128,6 +131,7 @@ class App extends Component {
       loggedIn: false
     });
     localStorage.removeItem("name");
+    this.props.history.push("/");
   };
 }
 

@@ -30,7 +30,7 @@ function Copyright() {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: "100%",
+    height: "100%"
   },
   image: {
     backgroundImage: `url(${theme.images.signIn})`,
@@ -54,6 +54,10 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  title: {
+    color: "white",
+    margin: theme.spacing(8)
   }
 }));
 
@@ -66,7 +70,11 @@ export default function SignInSide(props) {
 
   return (
     <Grid container component="main" className={classes.root}>
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid direction="column" alignItems="center" justify="flex-end" container xs={false} sm={4} md={7} className={classes.image}>
+        <Typography className={classes.title} component="h1" variant="h1">
+          Twilio Engage Sydney
+        </Typography>
+      </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>

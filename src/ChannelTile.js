@@ -7,11 +7,8 @@ import Badge from "@material-ui/core/Badge";
 import Moment from "react-moment";
 import Paper from "@material-ui/core/Paper";
 
-import PhoneIcon from "@material-ui/icons/PhoneIphone";
+import AvatarIcon from "./AvatarIcon";
 
-import Avatar from "@material-ui/core/Avatar";
-
-import Tooltip from "@material-ui/core/Tooltip";
 import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
@@ -45,11 +42,14 @@ class ChannelTile extends React.Component {
       const party = participants.find(p => p.sid === user.sid);
       const merged = {
         ...user,
+        type: party.messagingBinding
+          ? party.messagingBinding.type
+          : "chat",
         identity: party.messagingBinding
-          ? party.messagingBinding.type + ":" + party.messagingBinding.address
-          : user.identity
-      };
-      console.log(merged);
+          ? party.messagingBinding.address
+          : user.identity,
+        proxyAddress: party.messagingBinding ? party.messagingBinding.proxyAddress : null
+      }
       return merged;
     });
   };
@@ -92,23 +92,15 @@ class ChannelTile extends React.Component {
         <Grid container justify="center" alignItems="center">
           {this.state.users &&
             this.state.users.map(u => (
-              <Tooltip title={u.identity} key={"tip-" + u.state.sid}>
-                <Avatar key={"avatar-" + u.state.sid}>
-                  {u.state.identity ? (
-                    u.state.identity.toUpperCase().charAt(0)
-                  ) : (
-                    <PhoneIcon />
-                  )}
-                </Avatar>
-              </Tooltip>
+              <AvatarIcon channel={u.type} name={u.identity} id={u.state.sid} key={"icon-"+ u.state.sid} />
             ))}
         </Grid>
         <Typography variant="body2" className={classes.margin}>
           <span>Last Updated: </span>
-          <Moment
+          {this.props.channel.lastMessage ? (<Moment
             date={this.props.channel.lastMessage.timestamp}
             durationFromNow
-          />
+          />): "n/a"}
         </Typography>
       </Paper>
     );

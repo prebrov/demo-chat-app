@@ -1,25 +1,35 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+import signInBackdrop from "./img/engage-syd-backdrop.jpg"
+
+let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#1f77bc"
+      main: "#F22F46"
     },
     secondary: {
-      main: "#5d7888"
+      main: "#565B73"
     },
-    type: "dark"
+    type: "light"
   },
   overrides: {
     MuiButton: {
       outlined: {
         color: "white"
       }
+    },
+    MuiBreadcrumbs: {
+      ol: {
+        flexWrap: "nowrap"
+      }
     }
   },
   images: {
-    signIn: "https://www.deputy.com/static/homepage-052019/why-deputy@2x.jpg"
+    signIn: signInBackdrop
   }
 });
+
+theme = responsiveFontSizes(theme);
+
 
 export default theme;
