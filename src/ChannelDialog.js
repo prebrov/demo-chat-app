@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Dialog from "@material-ui/core/Dialog";
 
@@ -42,10 +42,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CreateChannel() {
-  const [open, setOpen] = React.useState(true);
-  const [name, setName] = React.useState("New Conversation");
+export default function ChannelDialog(props) {
+  const [open, setOpen] = React.useState(false);
+  const [name, setName] = React.useState(
+    props.channel ? props.channel.friendlyName : null
+  );
   const [addresses, setAddresses] = React.useState([]);
+
+  useEffect(() => {
+    // async function fetchUsers() {
+    //   const result = await getUsers(props.channel);
+    //   return result.map(item => item.identity);
+    // }
+    // if (props.channel) {
+    //   fetchUsers().then(users => setAddresses(users));
+    // }
+    if (props.members) {
+      setAddresses(props.members.map(i=>i.identity));
+    }
+    setOpen(props.open);
+  }, [props.members, props.open]);
   const [nextRoute, setNextRoute] = React.useState("/");
 
   const classes = useStyles();
@@ -54,16 +70,15 @@ export default function CreateChannel() {
 
   function handleClose() {
     setOpen(false);
+    props.onClose && props.onClose();
   }
 
   async function handleCreate() {
     const response = await fetch(
-      process.env.REACT_APP_CHAT_BACKEND +
-        "chat/create?ChannelName=" +
-        name
+      process.env.REACT_APP_CHAT_BACKEND + "chat/create?ChannelName=" + name
     );
     const channel = await response.json();
-    const promises = addresses.map((addr) => {
+    const promises = addresses.map(addr => {
       const party =
         addr.startsWith("+") ||
         addr.startsWith("messenger") ||
@@ -71,20 +86,55 @@ export default function CreateChannel() {
           ? `Address=${encodeURIComponent(addr)}`
           : `Identity=${encodeURIComponent(addr)}`;
       const url = `${process.env.REACT_APP_CHAT_BACKEND}chat/create?Channel=${channel.sid}&${party}`;
-      console.log(url);
-      return fetch(url).then((res)=>res.json());
+      return fetch(url).then(res => res.json());
     });
     Promise.all(promises).then(result => {
-      console.log(result);
       setNextRoute(`/channels/${channel.sid}`);
-      setOpen(false);
+      handleClose();
     });
   }
 
-  if (!open) {
-    return <Redirect to={nextRoute} />;
+  async function handleUpdate() {
+    try {
+      await fetch(
+        `${process.env.REACT_APP_CHAT_BACKEND}chat/create?Channel=${props.channel.sid}&ChannelName=${name}`
+      )
+    } catch (err) {
+      console.error(err);
+      return
+    }
+    const memberAddresses = props.members.map(m => m.identity);
+    // get added parties
+    let added = addresses.filter(x => !memberAddresses.includes(x));
+    console.log(added);
+
+    // get removed parties
+    let removed = props.members.filter(x => !addresses.includes(x.identity));
+    console.log(removed);
+
+    let promises = added.map(addr => {
+      const party =
+        addr.startsWith("+") ||
+        addr.startsWith("messenger") ||
+        addr.startsWith("whatsapp")
+          ? `Address=${encodeURIComponent(addr)}`
+          : `Identity=${encodeURIComponent(addr)}`;
+      const url = `${process.env.REACT_APP_CHAT_BACKEND}chat/create?Channel=${props.channel.sid}&${party}`;
+      return fetch(url).then(res => res.json());
+    });
+    promises.concat(removed.map(member => {
+      const url = `${process.env.REACT_APP_CHAT_BACKEND}chat/remove?Channel=${props.channel.sid}&Participant=${member.state.sid}`;
+      return fetch(url).then(res => res.json());
+    }))
+    Promise.all(promises).then(result => {
+      props.onMembersChanged && props.onMembersChanged(addresses);
+      handleClose()
+    });
   }
 
+  // if (!open) {
+  //   return <Redirect to={nextRoute} />;
+  // }
   return (
     <div>
       <Dialog
@@ -98,7 +148,11 @@ export default function CreateChannel() {
         aria-labelledby="form-dialog-title"
       >
         <Container>
-          <DialogTitle disableTypography id="form-dialog-title" className={classes.dialogTitle}>
+          <DialogTitle
+            disableTypography
+            id="form-dialog-title"
+            className={classes.dialogTitle}
+          >
             <TextField
               autoFocus
               margin="dense"
@@ -117,15 +171,21 @@ export default function CreateChannel() {
             </IconButton>
           </DialogTitle>
           <DialogContent className={classes.form}>
-            <AddressInput onChange={setAddresses} addresses={addresses}/>
+            <AddressInput onChange={setAddresses} addresses={addresses} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">
               Cancel
             </Button>
-            <Button onClick={handleCreate} color="primary">
-              Create Conversation
-            </Button>
+            {props.channel ? (
+              <Button onClick={handleUpdate} color="primary">
+                Update Conversation
+              </Button>
+            ) : (
+              <Button onClick={handleCreate} color="primary">
+                Create Conversation
+              </Button>
+            )}
           </DialogActions>
         </Container>
       </Dialog>

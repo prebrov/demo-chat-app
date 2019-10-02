@@ -17,7 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 // import './Chat.css';
 import { NavLink, Route, Redirect } from "react-router-dom";
-import CreateChannel from "./CreateChannel";
+import ChannelDialog from "./ChannelDialog";
 
 const ForwardNavLink = React.forwardRef((props, ref) => (
   <NavLink {...props} innerRef={ref} />
@@ -54,7 +54,8 @@ class ChatApp extends React.Component {
       statusString: null,
       chatReady: false,
       channels: [],
-      messages: []
+      messages: [],
+      channelDialogOpen: false
     };
     this.channelName = "general";
   }
@@ -119,6 +120,10 @@ class ChatApp extends React.Component {
     this.setState({ messages: messagePage.items });
   };
 
+  openChannelDialog = () => {
+    this.setState({channelDialogOpen: true})
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -161,7 +166,8 @@ class ChatApp extends React.Component {
                             item
                             xs={12}
                             sm={6}
-                            md={3}
+                            md={4}
+                            lg={3}
                             key={"grid-" + channel.sid}
                           >
                             <Link
@@ -181,39 +187,40 @@ class ChatApp extends React.Component {
                           </Grid>
                         ))}
                         {this.state.chatReady && (
-                          <Grid item xs={12} key="new">
-                            <Link
+                          <Grid
+                            item
+                            xs={12}
+                            key="new"
+                            onClick={this.openChannelDialog}
+                          >
+                            {/* <Link
                               component={ForwardNavLink}
                               style={{ textDecoration: "none" }}
                               key={"link-new"}
                               to={{
                                 pathname: `/new`
                               }}
-                            >
-                              <Paper className={classes.new} elevation={0}>
-                                <Typography
-                                  variant="h5"
-                                  className={classes.centered}
-                                >
-                                  <AddIcon />
-                                  Start New Conversation
-                                </Typography>
-                              </Paper>
-                            </Link>
+                            > */}
+                            <Paper className={classes.new} elevation={0}>
+                              <Typography
+                                variant="h5"
+                                className={classes.centered}
+                              >
+                                <AddIcon />
+                                Start New Conversation
+                              </Typography>
+                            </Paper>
+                            {/* </Link> */}
                           </Grid>
                         )}
                       </Grid>
                       <h4>{this.state.statusString}</h4>
+                      <ChannelDialog open={this.state.channelDialogOpen} onClose={()=>{this.setState({channelDialogOpen:false})}} />
                     </Box>
                   </Container>
                 );
               }}
             />
-            <Route exact path="/new"
-              render={match => {
-                return <CreateChannel />;
-              }}
-              />
           </div>
         </div>
       </div>

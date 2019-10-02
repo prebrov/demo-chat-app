@@ -7,13 +7,16 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
-import AttachFile from "@material-ui/icons/AttachFile";
+
+import AttachFileIcon from "@material-ui/icons/AttachFile";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { Fab, makeStyles } from "@material-ui/core";
 import Zoom from "@material-ui/core/Zoom";
+import ChannelDialog from "./ChannelDialog";
 
 const drawerOpen = true;
 const drawerHeight = "5em";
@@ -93,7 +96,9 @@ class ChatChannel extends Component {
       newMessage: "",
       messages: [],
       loadingState: "initializing",
-      boundChannels: new Set()
+      boundChannels: new Set(),
+      members: [],
+      dialogOpen: false
     };
   }
 
@@ -120,6 +125,8 @@ class ChatChannel extends Component {
     if (this.props.channelProxy) {
       this.loadMessagesFor(this.props.channelProxy);
 
+      getUsers(this.props.channelProxy).then(users=>this.setState({members: users}))
+
       if (!this.state.boundChannels.has(this.props.channelProxy)) {
         let newChannel = this.props.channelProxy;
         newChannel.on("messageAdded", m => this.messageAdded(m, newChannel));
@@ -133,6 +140,8 @@ class ChatChannel extends Component {
   componentDidUpdate = (oldProps, oldState) => {
     if (this.props.channelProxy !== oldState.channelProxy) {
       this.loadMessagesFor(this.props.channelProxy);
+
+      getUsers(this.props.channelProxy).then(users=>this.setState({members: users}))
 
       if (!this.state.boundChannels.has(this.props.channelProxy)) {
         let newChannel = this.props.channelProxy;
@@ -184,7 +193,7 @@ class ChatChannel extends Component {
     });
   };
 
-  openDialog = () => {
+  openFileDialog = () => {
     // Note that the ref is set async,
     // so it might be null at some point
     if (dropzoneRef.current) {
@@ -192,11 +201,26 @@ class ChatChannel extends Component {
     }
   };
 
+  openChannelDialog = () => {
+    this.setState({ dialogOpen: true });
+  }
+
   render = () => {
     const { classes } = this.props;
-
     return (
-      <div>
+      <div className={classes.messages}>
+        <ChannelDialog
+          open={this.state.dialogOpen}
+          channel={this.props.channelProxy}
+          members={this.state.members}
+          onMembersChanged={members => {
+            // re-fetch all the users
+            getUsers(this.props.channelProxy).then(users =>
+              this.setState({ members: users })
+            );
+          }}
+          onClose={() => this.setState({ dialogOpen: false })}
+        />
         <Dropzone
           ref={dropzoneRef}
           onDrop={this.onDrop}
@@ -271,8 +295,17 @@ class ChatChannel extends Component {
                 autoComplete="off"
                 autoFocus
               />
-              <IconButton className={classes.button} onClick={this.openDialog}>
-                <AttachFile />
+              <IconButton
+                className={classes.button}
+                onClick={this.openFileDialog}
+              >
+                <AttachFileIcon />
+              </IconButton>
+              <IconButton
+                className={classes.button}
+                onClick={this.openChannelDialog}
+              >
+                <GroupAddIcon />
               </IconButton>
               <Button
                 variant="contained"
@@ -288,5 +321,29 @@ class ChatChannel extends Component {
     );
   };
 }
+
+export async function getUsers(channel) {
+  const users = await channel.getMembers();
+  const resp = await fetch(
+    process.env.REACT_APP_CHAT_BACKEND +
+      `chat/participant?Channel=${channel.sid}`
+  );
+  const participants = await resp.json();
+  return users.map((user, i) => {
+    const party = participants.find(p => p.sid === user.sid);
+    const merged = {
+      ...user,
+      type: party.messagingBinding ? party.messagingBinding.type : "chat",
+      identity: party.messagingBinding
+        ? party.messagingBinding.address
+        : user.identity,
+      proxyAddress: party.messagingBinding
+        ? party.messagingBinding.proxy_address
+        : null
+    };
+    return merged;
+  });
+}
+
 
 export default withStyles(styles)(ChatChannel);

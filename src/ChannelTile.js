@@ -9,7 +9,17 @@ import Paper from "@material-ui/core/Paper";
 
 import AvatarIcon from "./AvatarIcon";
 
+import MenuIcon from "@material-ui/icons/Menu";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+
+import Menu from "@material-ui/core/Menu";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import MenuItem from "@material-ui/core/MenuItem";
+
+import { getUsers } from "./ChatChannel";
 
 const styles = theme => ({
   margin: {
@@ -18,6 +28,14 @@ const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: "center"
+  },
+  tileMenuButton: {
+    margin: theme.spacing(-1)
+  },
+  menuPaper: {
+    background: theme.palette.primary.main,
+    border: `2px solid ${theme.palette.primary.contrastText}`,
+    color: theme.palette.primary.contrastText
   }
 });
 class ChannelTile extends React.Component {
@@ -31,29 +49,6 @@ class ChannelTile extends React.Component {
     };
   }
 
-  getUsers = async () => {
-    const users = await this.props.channel.getMembers();
-    const resp = await fetch(
-      process.env.REACT_APP_CHAT_BACKEND +
-        `chat/participant?Channel=${this.props.channel.sid}`
-    );
-    const participants = await resp.json();
-    return users.map((user, i) => {
-      const party = participants.find(p => p.sid === user.sid);
-      const merged = {
-        ...user,
-        type: party.messagingBinding
-          ? party.messagingBinding.type
-          : "chat",
-        identity: party.messagingBinding
-          ? party.messagingBinding.address
-          : user.identity,
-        proxyAddress: party.messagingBinding ? party.messagingBinding.proxyAddress : null
-      }
-      return merged;
-    });
-  };
-
   getMessagesCount = async () => {
     return await this.props.channel.getUnconsumedMessagesCount();
   };
@@ -64,7 +59,7 @@ class ChannelTile extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    const users = this.getUsers();
+    const users = getUsers(this.props.channel);
     const messagesCount = this.getMessagesCount();
     Promise.all([users, messagesCount]).then(values => {
       if (this._isMounted) {
@@ -76,31 +71,96 @@ class ChannelTile extends React.Component {
     });
   }
 
+  openTileMenu = event => {
+    event.preventDefault();
+    this.setState({ tileMenuAnchor: event.currentTarget });
+  };
+
+  closeTileMenu = event => {
+    event.preventDefault();
+    this.setState({ tileMenuAnchor: null });
+  };
+
+  deleteChannel = async (event) => {
+    event.preventDefault();
+    await fetch(
+      process.env.REACT_APP_CHAT_BACKEND +
+        `chat/remove?Channel=${this.props.channel.sid}`
+    );
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <Paper className={classes.paper}>
-        <Badge
-          className={classes.margin}
-          badgeContent={this.state.messagesCount}
-          color="secondary"
-        >
-          <Typography variant="h5">
-            {this.props.channel.friendlyName}
-          </Typography>
-        </Badge>
+        <Grid container className={classes.margin}>
+          <Grid item xs={1}>
+            <IconButton
+              className={classes.tileMenuButton}
+              fontSize="small"
+              onClick={this.openTileMenu}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id={"tile-menu-" + this.props.channel.sid}
+              anchorEl={this.state.tileMenuAnchor}
+              getContentAnchorEl={null}
+              keepMounted
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center"
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center"
+              }}
+              classes={{
+                paper: classes.menuPaper
+              }}
+              open={Boolean(this.state.tileMenuAnchor)}
+              onClose={this.closeTileMenu}
+            >
+              <MenuItem onClick={this.deleteChannel}>
+                <ListItemIcon>
+                  <DeleteIcon />
+                </ListItemIcon>
+                <Typography>Delete Channel</Typography>
+              </MenuItem>
+            </Menu>
+          </Grid>
+          <Grid item xs={11}>
+            <Badge
+              badgeContent={this.state.messagesCount}
+              color="secondary"
+            >
+              <Typography variant="h5">
+                {this.props.channel.friendlyName}
+              </Typography>
+            </Badge>
+          </Grid>
+        </Grid>
         <Grid container justify="center" alignItems="center">
           {this.state.users &&
             this.state.users.map(u => (
-              <AvatarIcon channel={u.type} name={u.identity} id={u.state.sid} key={"icon-"+ u.state.sid} />
+              <AvatarIcon
+                channel={u.type}
+                name={u.identity}
+                id={u.state.sid}
+                key={"icon-" + u.state.sid}
+              />
             ))}
         </Grid>
         <Typography variant="body2" className={classes.margin}>
           <span>Last Updated: </span>
-          {this.props.channel.lastMessage ? (<Moment
-            date={this.props.channel.lastMessage.timestamp}
-            durationFromNow
-          />): "n/a"}
+          {this.props.channel.lastMessage ? (
+            <Moment
+              date={this.props.channel.lastMessage.timestamp}
+              durationFromNow
+            />
+          ) : (
+            "n/a"
+          )}
         </Typography>
       </Paper>
     );

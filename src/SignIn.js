@@ -70,7 +70,7 @@ export default function SignInSide(props) {
 
   return (
     <Grid container component="main" className={classes.root}>
-      <Grid direction="column" alignItems="center" justify="flex-end" container xs={false} sm={4} md={7} className={classes.image}>
+      <Grid item direction="column" alignItems="center" justify="flex-end" container xs={false} sm={4} md={7} className={classes.image}>
         <Typography className={classes.title} component="h1" variant="h1">
           Twilio Engage Sydney
         </Typography>
