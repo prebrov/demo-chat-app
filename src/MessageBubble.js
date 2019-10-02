@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Moment from "react-moment";
 
 import { withStyles } from "@material-ui/styles";
+import Paper from "@material-ui/core/Paper";
 
 const styles = theme => ({
   container: {},
@@ -78,7 +79,7 @@ class MessageBubble extends Component {
     return (
       <div className={classes.container}>
         <div className={classes.message}>
-          <div className={classes.bubble}>
+          <Paper className={classes.bubble} elevation={2}>
             <strong>{m.author}</strong>
             <br />
             {m.type === "media" ? (
@@ -88,7 +89,7 @@ class MessageBubble extends Component {
               />
             ) : null}
             {m.body}
-          </div>
+          </Paper>
           <span className={classes.time_date}>
             <Moment fromNow>{m.timestamp}</Moment>
           </span>

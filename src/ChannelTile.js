@@ -26,7 +26,7 @@ const styles = theme => ({
     margin: theme.spacing(1)
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     textAlign: "center"
   },
   tileMenuButton: {
@@ -92,7 +92,7 @@ class ChannelTile extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={5}>
         <Grid container className={classes.margin}>
           <Grid item xs={1}>
             <IconButton
@@ -156,7 +156,7 @@ class ChannelTile extends React.Component {
           {this.props.channel.lastMessage ? (
             <Moment
               date={this.props.channel.lastMessage.timestamp}
-              durationFromNow
+              fromNow
             />
           ) : (
             "n/a"

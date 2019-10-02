@@ -15,7 +15,6 @@ import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 
-// import './Chat.css';
 import { NavLink, Route, Redirect } from "react-router-dom";
 import ChannelDialog from "./ChannelDialog";
 

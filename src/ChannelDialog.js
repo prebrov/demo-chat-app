@@ -15,7 +15,6 @@ import theme from "./theme";
 import { IconButton, makeStyles, Container } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
-import { Redirect } from "react-router-dom";
 
 import AddressInput from "./AddressInput";
 
@@ -132,9 +131,6 @@ export default function ChannelDialog(props) {
     });
   }
 
-  // if (!open) {
-  //   return <Redirect to={nextRoute} />;
-  // }
   return (
     <div>
       <Dialog

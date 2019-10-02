@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ChatApp from "./ChatApp";
 import SignIn from "./SignIn";
 
-import AppIcon from "./AppIcon";
 import AppBar from "@material-ui/core/AppBar";
 
 import Toolbar from "@material-ui/core/Toolbar";
@@ -33,10 +32,14 @@ const styles = theme => ({
   appIcon: {
     width: "10rem",
     margin: "0.5rem",
-    height: "auto",
+    minHeight: "48px",
     [theme.breakpoints.down("xs")]: {
       width: "6rem"
-    }
+    },
+    backgroundImage: `url(${theme.images.logo})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundPosition: "left"
   },
   title: {
     color: theme.palette.getContrastText(theme.palette.primary.main)
@@ -76,9 +79,7 @@ class App extends Component {
               separator={<NavigateNextIcon fontSize="small" />}
             >
               <Link color="inherit" to="/" component={ForwardNavLink}>
-                <div className={classes.appIcon}>
-                  <AppIcon />
-                </div>
+                <div className={classes.appIcon}></div>
               </Link>
               {this.state.loggedIn && this.props.location.state && (
                 <Typography variant="h5" noWrap>
