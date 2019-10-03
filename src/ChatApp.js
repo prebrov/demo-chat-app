@@ -1,22 +1,22 @@
 import React from "react";
+import { NavLink, Route, Redirect } from "react-router-dom";
+
 import { Client as ChatClient } from "twilio-chat";
-import ChatChannel from "./ChatChannel";
 
 import { withStyles } from "@material-ui/styles";
 
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-
-import ChannelTile from "./ChannelTile";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 
-import { NavLink, Route, Redirect } from "react-router-dom";
+import ChatChannel from "./ChatChannel";
 import ChannelDialog from "./ChannelDialog";
+import ChannelTile from "./ChannelTile";
+
 
 const ForwardNavLink = React.forwardRef((props, ref) => (
   <NavLink {...props} innerRef={ref} />
@@ -192,14 +192,6 @@ class ChatApp extends React.Component {
                             key="new"
                             onClick={this.openChannelDialog}
                           >
-                            {/* <Link
-                              component={ForwardNavLink}
-                              style={{ textDecoration: "none" }}
-                              key={"link-new"}
-                              to={{
-                                pathname: `/new`
-                              }}
-                            > */}
                             <Paper className={classes.new} elevation={0}>
                               <Typography
                                 variant="h5"
@@ -209,12 +201,11 @@ class ChatApp extends React.Component {
                                 Start New Conversation
                               </Typography>
                             </Paper>
-                            {/* </Link> */}
                           </Grid>
                         )}
                       </Grid>
                       <h4>{this.state.statusString}</h4>
-                      <ChannelDialog open={this.state.channelDialogOpen} onClose={()=>{this.setState({channelDialogOpen:false})}} />
+                      <ChannelDialog myIdentity={this.props.name} open={this.state.channelDialogOpen} onClose={()=>{this.setState({channelDialogOpen:false})}} />
                     </Box>
                   </Container>
                 );

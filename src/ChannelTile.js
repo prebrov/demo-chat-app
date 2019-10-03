@@ -1,24 +1,19 @@
 import React from "react";
-import { withStyles } from "@material-ui/styles";
-
-import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
-
 import Moment from "react-moment";
-import Paper from "@material-ui/core/Paper";
 
-import AvatarIcon from "./AvatarIcon";
-
+import { withStyles } from "@material-ui/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import Badge from "@material-ui/core/Badge";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-
-import Menu from "@material-ui/core/Menu";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
+import AvatarIcon from "./AvatarIcon";
 import { getUsers } from "./ChatChannel";
 
 const styles = theme => ({

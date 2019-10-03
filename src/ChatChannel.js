@@ -1,5 +1,4 @@
 import React, { Component, createRef } from "react";
-import MessageBubble from "./MessageBubble";
 import Dropzone from "react-dropzone";
 
 import { withStyles } from "@material-ui/styles";
@@ -16,7 +15,9 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { Fab, makeStyles } from "@material-ui/core";
 import Zoom from "@material-ui/core/Zoom";
+
 import ChannelDialog from "./ChannelDialog";
+import MessageBubble from "./MessageBubble";
 
 const drawerOpen = true;
 const drawerHeight = "5em";
@@ -212,6 +213,7 @@ class ChatChannel extends Component {
         <ChannelDialog
           open={this.state.dialogOpen}
           channel={this.props.channelProxy}
+          myIdentity={this.props.myIdentity}
           members={this.state.members}
           onMembersChanged={members => {
             // re-fetch all the users

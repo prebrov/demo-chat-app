@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import ChatApp from "./ChatApp";
-import SignIn from "./SignIn";
 
+import { NavLink, withRouter } from "react-router-dom";
+
+import { withStyles } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
-
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
-import { withStyles } from "@material-ui/styles";
-import { NavLink, withRouter } from "react-router-dom";
-
-import Link from "@material-ui/core/Link";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Typography from "@material-ui/core/Typography";
+import ChatApp from "./ChatApp";
+import SignIn from "./SignIn";
 
 const ForwardNavLink = React.forwardRef((props, ref) => (
   <NavLink {...props} innerRef={ref} />

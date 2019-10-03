@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 
+import { makeStyles } from "@material-ui/core";
+import Container from "@material-ui/core/Container";
 import Dialog from "@material-ui/core/Dialog";
-
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import theme from "./theme";
-import { IconButton, makeStyles, Container } from "@material-ui/core";
 
+import IconButton from "@material-ui/core/IconButton"
 import CloseIcon from "@material-ui/icons/Close";
 
 import AddressInput from "./AddressInput";
@@ -44,9 +44,9 @@ const useStyles = makeStyles(theme => ({
 export default function ChannelDialog(props) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(
-    props.channel ? props.channel.friendlyName : null
+    props.channel ? props.channel.friendlyName : ""
   );
-  const [addresses, setAddresses] = React.useState([]);
+  const [addresses, setAddresses] = React.useState([props.myIdentity]);
 
   useEffect(() => {
     // async function fetchUsers() {
@@ -57,11 +57,10 @@ export default function ChannelDialog(props) {
     //   fetchUsers().then(users => setAddresses(users));
     // }
     if (props.members) {
-      setAddresses(props.members.map(i=>i.identity));
+      setAddresses(props.members.map(i => i.identity));
     }
     setOpen(props.open);
   }, [props.members, props.open]);
-  const [nextRoute, setNextRoute] = React.useState("/");
 
   const classes = useStyles();
 
@@ -88,7 +87,6 @@ export default function ChannelDialog(props) {
       return fetch(url).then(res => res.json());
     });
     Promise.all(promises).then(result => {
-      setNextRoute(`/channels/${channel.sid}`);
       handleClose();
     });
   }
