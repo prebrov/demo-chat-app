@@ -1,15 +1,15 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
-import signInBackdrop from "./img/engage-syd-backdrop.jpg"
-import logo from "./img/twilio-logo-white.svg"
+import signInBackdrop from "./img/owlshoes-hero.jpg"
+import logo from "./img/owl-shoes-logo.png"
 
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#F22F46"
+      main: "#488EA1"
     },
     secondary: {
-      main: "#008CFF"
+      main: "#2E7386"
     },
     type: "dark"
   },
@@ -29,7 +29,7 @@ let theme = createMuiTheme({
     logo: logo,
     signIn: signInBackdrop
   },
-  loginTitle: "Twilio Engage: Sydney"
+  loginTitle: "Driver communications system"
 });
 
 theme = responsiveFontSizes(theme);

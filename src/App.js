@@ -28,6 +28,9 @@ const styles = theme => ({
   spacer: {
     flexGrow: 1
   },
+  subtitle: {
+    fontFamily: "Racing Sans One"
+  },
   appIcon: {
     width: "10rem",
     margin: "0.5rem",
@@ -77,8 +80,9 @@ class App extends Component {
               aria-label="breadcrumb"
               separator={<NavigateNextIcon fontSize="small" />}
             >
-              <Link color="inherit" to="/" component={ForwardNavLink}>
+              <Link color="inherit" to="/" component={ForwardNavLink} style={{display: "flex", alignItems:"center"}}>
                 <div className={classes.appIcon}></div>
+                <Typography variant="h4" className={classes.subtitle}>Driver</Typography>
               </Link>
               {this.state.loggedIn && this.state.selectedChannel && (
                 <Typography variant="h5" noWrap>
