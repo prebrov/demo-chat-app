@@ -80,9 +80,9 @@ class App extends Component {
               <Link color="inherit" to="/" component={ForwardNavLink}>
                 <div className={classes.appIcon}></div>
               </Link>
-              {this.state.loggedIn && this.props.location.state && (
+              {this.state.loggedIn && this.state.selectedChannel && (
                 <Typography variant="h5" noWrap>
-                  {this.props.location.state.channelName}
+                {this.state.selectedChannel.friendlyName}
                 </Typography>
               )}
             </Breadcrumbs>
@@ -101,7 +101,12 @@ class App extends Component {
             )}
           </Toolbar>
         </AppBar>
-        {this.state.loggedIn && <ChatApp name={this.state.name} />}
+        {this.state.loggedIn && (
+          <ChatApp
+            name={this.state.name}
+            onChannelSelected={this.onChannelSelected}
+          />
+        )}
         {!this.state.loggedIn && (
           <SignIn
             name={this.state.name}
@@ -111,6 +116,10 @@ class App extends Component {
         )}
       </div>
     );
+  }
+
+  onChannelSelected = channel => {
+    this.setState({ selectedChannel: channel });
   }
 
   onNameChanged = event => {
