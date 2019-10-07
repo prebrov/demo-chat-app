@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
+import theme from "./theme";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -57,7 +59,8 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     color: "white",
-    margin: theme.spacing(8)
+    margin: theme.spacing(8),
+    textShadow: "2px 2px 5px darkslategrey"
   }
 }));
 
@@ -71,8 +74,8 @@ export default function SignInSide(props) {
   return (
     <Grid container component="main" className={classes.root}>
       <Grid item direction="column" alignItems="center" justify="flex-end" container xs={false} sm={4} md={7} className={classes.image}>
-        <Typography className={classes.title} component="h1" variant="h1">
-          Twilio Engage Sydney
+        <Typography className={classes.title} component="h2" variant="h2">
+          {theme.loginTitle}
         </Typography>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

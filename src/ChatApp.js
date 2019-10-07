@@ -204,8 +204,16 @@ class ChatApp extends React.Component {
                           </Grid>
                         )}
                       </Grid>
-                      <h4>{this.state.statusString}</h4>
-                      <ChannelDialog myIdentity={this.props.name} open={this.state.channelDialogOpen} onClose={()=>{this.setState({channelDialogOpen:false})}} />
+                      <h4>
+                        {this.state.statusString} [{this.props.name}]
+                      </h4>
+                      <ChannelDialog
+                        myIdentity={this.props.name}
+                        open={this.state.channelDialogOpen}
+                        onClose={() => {
+                          this.setState({ channelDialogOpen: false });
+                        }}
+                      />
                     </Box>
                   </Container>
                 );

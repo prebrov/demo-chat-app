@@ -331,9 +331,9 @@ export async function getUsers(channel) {
       `chat/participant?Channel=${channel.sid}`
   );
   const participants = await resp.json();
-  return users.map((user, i) => {
-    const party = participants.find(p => p.sid === user.sid);
-    const merged = {
+  return participants.map((party) => {
+    const user = users.find(u => u.sid === party.sid);
+    return  {
       ...user,
       type: party.messagingBinding ? party.messagingBinding.type : "chat",
       identity: party.messagingBinding
@@ -343,7 +343,6 @@ export async function getUsers(channel) {
         ? party.messagingBinding.proxy_address
         : null
     };
-    return merged;
   });
 }
 

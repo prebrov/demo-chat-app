@@ -28,7 +28,8 @@ let theme = createMuiTheme({
   images: {
     logo: logo,
     signIn: signInBackdrop
-  }
+  },
+  loginTitle: "Twilio Engage: Sydney"
 });
 
 theme = responsiveFontSizes(theme);
