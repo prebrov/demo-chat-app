@@ -75,7 +75,7 @@ export default function SignInSide(props) {
     <Grid container component="main" className={classes.root}>
       <Grid item direction="column" alignItems="center" justify="flex-end" container xs={false} sm={4} md={7} className={classes.image}>
         <Typography className={classes.title} component="h2" variant="h2">
-          {theme.loginTitle}
+          {theme.strings.loginTitle}
         </Typography>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

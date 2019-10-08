@@ -33,7 +33,7 @@ const styles = theme => ({
   },
   appIcon: {
     width: "10rem",
-    margin: "0.5rem",
+    margin: "-0.5rem",
     minHeight: "48px",
     [theme.breakpoints.down("xs")]: {
       width: "6rem"
@@ -45,6 +45,11 @@ const styles = theme => ({
   },
   title: {
     color: theme.palette.getContrastText(theme.palette.primary.main)
+  },
+  titleWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   }
 });
 
@@ -62,6 +67,9 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
+    const thread = this.props.location.state
+      ? this.props.location.state.channelName
+      : this.state.selectedChannel ? this.state.selectedChannel.friendlyName : null;
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -80,13 +88,20 @@ class App extends Component {
               aria-label="breadcrumb"
               separator={<NavigateNextIcon fontSize="small" />}
             >
-              <Link color="inherit" to="/" component={ForwardNavLink} style={{display: "flex", alignItems:"center"}}>
+              <Link
+                color="inherit"
+                to="/"
+                component={ForwardNavLink}
+                className={classes.titleWrapper}
+              >
                 <div className={classes.appIcon}></div>
-                <Typography variant="h4" className={classes.subtitle}>Driver</Typography>
+                <Typography variant="h4" className={classes.subtitle}>
+                  Driver
+                </Typography>
               </Link>
-              {this.state.loggedIn && this.state.selectedChannel && (
+              {this.state.loggedIn && thread && (
                 <Typography variant="h5" noWrap>
-                {this.state.selectedChannel.friendlyName}
+                  {thread}
                 </Typography>
               )}
             </Breadcrumbs>
@@ -124,7 +139,7 @@ class App extends Component {
 
   onChannelSelected = channel => {
     this.setState({ selectedChannel: channel });
-  }
+  };
 
   onNameChanged = event => {
     this.setState({ name: event.target.value });

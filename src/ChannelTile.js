@@ -125,10 +125,7 @@ class ChannelTile extends React.Component {
             </Menu>
           </Grid>
           <Grid item xs={11}>
-            <Badge
-              badgeContent={this.state.messagesCount}
-              color="secondary"
-            >
+            <Badge badgeContent={this.state.messagesCount} color="secondary">
               <Typography variant="h5">
                 {this.props.channel.friendlyName}
               </Typography>
@@ -149,10 +146,7 @@ class ChannelTile extends React.Component {
         <Typography variant="body2" className={classes.margin}>
           <span>Last Updated: </span>
           {this.props.channel.lastMessage ? (
-            <Moment
-              date={this.props.channel.lastMessage.timestamp}
-              fromNow
-            />
+            <Moment date={this.props.channel.lastMessage.timestamp} fromNow />
           ) : (
             "n/a"
           )}

@@ -20,6 +20,8 @@ import ChannelDialog from "./ChannelDialog";
 import ChannelTile from "./ChannelTile";
 import { Modal, CircularProgress } from "@material-ui/core";
 
+import theme from "./theme";
+
 const ForwardNavLink = React.forwardRef((props, ref) => (
   <NavLink {...props} innerRef={ref} />
 ));
@@ -76,6 +78,17 @@ class ChatApp extends React.Component {
     this.channel = null;
   };
 
+  componentDidUpdate = prevProps => {
+    // hack to remove selected channel state
+    // FIXME - push up route state to App level
+    if (
+      !prevProps.location.pathname.endsWith("/") &&
+      this.props.location.pathname.endsWith("/")
+    ) {
+      this.props.onChannelSelected && this.props.onChannelSelected(null);
+    }
+  };
+
   getToken = async () => {
     // Paste your unique Chat token function
     const response = await fetch(
@@ -110,13 +123,16 @@ class ChatApp extends React.Component {
       if (state === "denied")
         this.setState({ statusString: "Failed to connect.", chatReady: false });
     });
-    this.chatClient.on("channelJoined", function(channel) {
-      console.log("channelJoined", channel.friendlyName);
-      if (this.props.location.pathname.endsWith(channel.sid)) {
-        this.props.onChannelSelected && this.props.onChannelSelected(channel);
-      }
-      this.setState({ channels: [...this.state.channels, channel] });
-    }.bind(this));
+    this.chatClient.on(
+      "channelJoined",
+      function(channel) {
+        console.log("channelJoined", channel.friendlyName);
+        if (this.props.location.pathname.endsWith(channel.sid)) {
+          this.props.onChannelSelected && this.props.onChannelSelected(channel);
+        }
+        this.setState({ channels: [...this.state.channels, channel] });
+      }.bind(this)
+    );
     this.chatClient.on("channelLeft", thisChannel => {
       this.setState({
         channels: [...this.state.channels.filter(it => it !== thisChannel)]
@@ -199,7 +215,7 @@ class ChatApp extends React.Component {
                     <Container>
                       <Box pt={2}>
                         <Typography variant="h4" gutterBottom>
-                          Open Conversations
+                          {theme.strings.openTitle}
                         </Typography>
                         <Grid container spacing={3}>
                           {this.state.channels.map(channel => (
@@ -215,7 +231,10 @@ class ChatApp extends React.Component {
                                 component={ForwardNavLink}
                                 style={{ textDecoration: "none" }}
                                 key={"link-" + channel.sid}
-                                to={`/channels/${channel.sid}`}
+                                to={{
+                                  pathname: "/channels/"+channel.sid,
+                                  state: { channelName: channel.friendlyName }
+                                }}
                               >
                                 <ChannelTile
                                   key={channel.sid}

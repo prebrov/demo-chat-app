@@ -29,7 +29,10 @@ let theme = createMuiTheme({
     logo: logo,
     signIn: signInBackdrop
   },
-  loginTitle: "Driver communications system"
+  strings: {
+    loginTitle: "Driver communications system",
+    openTitle: "Current deliveries"
+  }
 });
 
 theme = responsiveFontSizes(theme);
