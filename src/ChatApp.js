@@ -94,7 +94,7 @@ class ChatApp extends React.Component {
     const response = await fetch(
       process.env.REACT_APP_CHAT_BACKEND +
         "chat/token?Identity=" +
-        this.props.name
+        encodeURIComponent(this.props.name)
     );
     const myToken = await response.json();
     this.setState({ token: myToken.token }, this.initChat);
@@ -213,36 +213,44 @@ class ChatApp extends React.Component {
                 render={match => {
                   return (
                     <Container>
-                      <Box pt={2}>
-                        <Typography variant="h4" gutterBottom>
-                          {theme.strings.openTitle}
-                        </Typography>
+                      <Box pt={1}>
+                        {this.state.chatReady && (
+                          <Typography variant="h4" className={classes.margin}>
+                            {theme.strings.openTitle}
+                          </Typography>
+                        )}
                         <Grid container spacing={3}>
-                          {this.state.channels.map(channel => (
-                            <Grid
-                              item
-                              xs={12}
-                              sm={6}
-                              md={4}
-                              lg={3}
-                              key={"grid-" + channel.sid}
-                            >
-                              <Link
-                                component={ForwardNavLink}
-                                style={{ textDecoration: "none" }}
-                                key={"link-" + channel.sid}
-                                to={{
-                                  pathname: "/channels/"+channel.sid,
-                                  state: { channelName: channel.friendlyName }
-                                }}
+                          {this.state.channels
+                            .filter(
+                              c => c.attributes.delivery === "in-progress"
+                            )
+                            .map(channel => (
+                              <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                key={"grid-" + channel.sid}
                               >
-                                <ChannelTile
-                                  key={channel.sid}
-                                  channel={channel}
-                                />
-                              </Link>
-                            </Grid>
-                          ))}
+                                <Link
+                                  component={ForwardNavLink}
+                                  style={{ textDecoration: "none" }}
+                                  key={"link-" + channel.sid}
+                                  to={{
+                                    pathname: "/channels/" + channel.sid,
+                                    state: { channelName: channel.friendlyName }
+                                  }}
+                                >
+                                  <ChannelTile
+                                    active
+                                    myIdentity={this.props.name}
+                                    key={channel.sid}
+                                    channel={channel}
+                                  />
+                                </Link>
+                              </Grid>
+                            ))}
                           {this.state.chatReady && (
                             <Grid
                               item
@@ -262,6 +270,45 @@ class ChatApp extends React.Component {
                             </Grid>
                           )}
                         </Grid>
+                        {this.state.chatReady && (
+                          <Typography variant="h5" className={classes.margin}>
+                            {theme.strings.archivedTitle}
+                          </Typography>
+                        )}
+                        <Grid container spacing={3}>
+                          {this.state.channels
+                            .filter(
+                              c => c.attributes.delivery !== "in-progress"
+                            )
+                            .map(channel => (
+                              <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                key={"grid-" + channel.sid}
+                              >
+                                <Link
+                                  component={ForwardNavLink}
+                                  style={{ textDecoration: "none" }}
+                                  key={"link-" + channel.sid}
+                                  to={{
+                                    pathname: "/channels/" + channel.sid,
+                                    state: { channelName: channel.friendlyName }
+                                  }}
+                                >
+                                  <ChannelTile
+                                    active={false}
+                                    myIdentity={this.props.name}
+                                    key={channel.sid}
+                                    channel={channel}
+                                  />
+                                </Link>
+                              </Grid>
+                            ))}
+                        </Grid>
+
                         <h4>
                           {this.state.statusString} [{this.props.name}]
                         </h4>

@@ -31,7 +31,8 @@ let theme = createMuiTheme({
   },
   strings: {
     loginTitle: "Driver communications system",
-    openTitle: "Current deliveries"
+    openTitle: "Current deliveries",
+    archivedTitle: "Past deliveries"
   }
 });
 

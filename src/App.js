@@ -72,7 +72,7 @@ class App extends Component {
       : this.state.selectedChannel ? this.state.selectedChannel.friendlyName : null;
     return (
       <div className={classes.root}>
-        <AppBar position="fixed">
+        <AppBar position="absolute">
           <Toolbar variant="dense">
             <IconButton
               edge="start"

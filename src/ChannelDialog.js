@@ -15,6 +15,8 @@ import AddressInput from "./AddressInput";
 import theme from "./theme";
 import StatusMessage from "./StatusMessage";
 
+require("promise.allsettled").shim();
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -66,7 +68,7 @@ export default function ChannelDialog(props) {
 
   async function handleCreate() {
     const response = await fetch(
-      process.env.REACT_APP_CHAT_BACKEND + "chat/create?ChannelName=" + name
+      process.env.REACT_APP_CHAT_BACKEND + "chat/create?ChannelName=" + encodeURIComponent(name)
     );
     const channel = await response.json();
     const promises = addresses.map(addr => {
@@ -105,7 +107,7 @@ export default function ChannelDialog(props) {
   async function handleUpdate() {
     try {
       await fetch(
-        `${process.env.REACT_APP_CHAT_BACKEND}chat/create?Channel=${props.channel.sid}&ChannelName=${name}`
+        `${process.env.REACT_APP_CHAT_BACKEND}chat/create?Channel=${props.channel.sid}&ChannelName=${encodeURIComponent(name)}`
       )
     } catch (err) {
       console.error(err);

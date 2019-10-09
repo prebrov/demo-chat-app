@@ -27,7 +27,7 @@ export default function AddressInput(props) {
       fullWidth={true}
       fullWidthInput={false}
       onChange={props.onChange}
-      helperText={"Chat username, WhatsApp, Facebook Messenger or E.164"}
+      helperText={"Chat username, WhatsApp or SMS number (E.164)"}
       onBeforeAdd={validateInput}
     />
   )
