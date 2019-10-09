@@ -102,7 +102,7 @@ class ChannelTile extends React.Component {
       .map(u =>
         fetch(
           process.env.REACT_APP_CHAT_BACKEND +
-            `chat/remove?Channel=${this.props.channel.sid}&Participant=${u.sid}`
+            `chat/remove?Channel=${this.props.channel.sid}&Participant=${u.state.sid}`
         )
       );
     const attributes = encodeURIComponent(

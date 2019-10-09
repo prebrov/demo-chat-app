@@ -332,7 +332,7 @@ export async function getUsers(channel) {
   );
   const participants = await resp.json();
   return participants.map((party) => {
-    const user = users.find(u => u.sid === party.sid);
+    const user = users.find(u => u.state.sid === party.sid);
     return  {
       ...user,
       type: party.messagingBinding ? party.messagingBinding.type : "chat",

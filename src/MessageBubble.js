@@ -75,12 +75,13 @@ class MessageBubble extends Component {
       // log media properties
       console.log("Media properties", m.media);
     }
+    const author = m.author.match(/(whatsapp:)?[+][0-9]+/) ? m.author.substring(0, m.author.length - 4) + "XXXX" : m.author;
 
     return (
       <div className={classes.container}>
         <div className={classes.message}>
           <Paper className={classes.bubble} elevation={2}>
-            <strong>{m.author}</strong>
+            <strong>{author}</strong>
             <br />
             {m.type === "media" ? (
               <Media
