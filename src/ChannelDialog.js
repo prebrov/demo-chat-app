@@ -68,7 +68,7 @@ export default function ChannelDialog(props) {
 
   async function handleCreate() {
     const response = await fetch(
-      process.env.REACT_APP_CHAT_BACKEND + "chat/create?ChannelName=" + encodeURIComponent(name)
+      `${process.env.REACT_APP_CHAT_BACKEND}chat/create?ChannelName=${encodeURIComponent(name)}`
     );
     const channel = await response.json();
     const promises = addresses.map(addr => {

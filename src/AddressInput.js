@@ -21,7 +21,7 @@ export default function AddressInput(props) {
   }
   return (
     <ChipInput
-      label={"Add Participants (up to 50)"}
+      label={"Add Participants and press Enter"}
       defaultValue={props.addresses}
       blurBehavior="ignore"
       fullWidth={true}
