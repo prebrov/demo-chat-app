@@ -1,15 +1,15 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
-import signInBackdrop from "./img/owlshoes-hero.jpg"
-import logo from "./img/owl-shoes-logo.png"
+import signInBackdrop from "./img/grab-hero.jpg";
+import logo from "./img/grab-logo-white.svg";
 
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#488EA1"
+      main: "#00ba51"
     },
     secondary: {
-      main: "#2E7386"
+      main: "#1aae48"
     },
     type: "dark"
   },
@@ -31,8 +31,8 @@ let theme = createMuiTheme({
   },
   strings: {
     loginTitle: "Driver communications system",
-    openTitle: "Current deliveries",
-    archivedTitle: "Past deliveries"
+    openTitle: "Current conversations",
+    archivedTitle: "Past conversations"
   }
 });
 

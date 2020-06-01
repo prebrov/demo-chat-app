@@ -73,7 +73,8 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="absolute">
-          <Toolbar variant="dense">
+          <Toolbar variant="regular">
+{/*
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -82,7 +83,7 @@ class App extends Component {
             >
               <MenuIcon />
             </IconButton>
-
+*/}
             <Breadcrumbs
               className={classes.title}
               aria-label="breadcrumb"
@@ -95,9 +96,11 @@ class App extends Component {
                 className={classes.titleWrapper}
               >
                 <div className={classes.appIcon}></div>
+{/*
                 <Typography variant="h4" className={classes.subtitle}>
                   Driver
                 </Typography>
+*/}
               </Link>
               {this.state.loggedIn && thread && (
                 <Typography variant="h5" noWrap>

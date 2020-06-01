@@ -1,7 +1,7 @@
 {
   "build": {
     "env": {
-      "REACT_APP_CHAT_BACKEND": "https://chat-backend-3191-dev.twil.io/"
+      "REACT_APP_CHAT_BACKEND": "https://chat-backend-4719-dev.twil.io/"
     }
   }
 }
