@@ -17,7 +17,7 @@ If you wish to include self-service or a bot prior to the conversation, modify I
 
 ## Deploying the backend chat application (on Twilio)
 
-* Clone [demo-chat-backend](https://github.com/cwkendall/demo-chat-backend)
+* Clone [demo-chat-backend](https://github.com/prebrov/demo-chat-backend)
 * copy `.env.example` to `.env` and set the following environment variables from your Twilio account:
 
 ```bash
@@ -41,7 +41,7 @@ WHATSAPP_SENDERS=whatsapp:<number>,whatsapp:<number>
 
 ## Running the frontend application
 
-* Clone [demo-chat-app](https://github.com/cwkendall/demo-chat-app) and run locally or deploy to [Zeit Now](https://zeit.co/now)
+* Clone [demo-chat-app](https://github.com/prebrov/demo-chat-app) and run locally or deploy to [Zeit Now](https://zeit.co/now)
 
 In either case:
 
